@@ -2,6 +2,7 @@ import numpy as np
 from scipy import linalg
 
 class Model:
+
     def __init__(self, model_type, lamb=None):
         self.supported_models = {'Logistic', 'Logistic Lasso', 'SVC', 'SVC_C', 'LDA'}
         self.requires_gradient_descent = {'Logistic', 'Logistic Lasso', 'SVC', 'SVC_C'}
@@ -20,25 +21,33 @@ class Model:
             raise ValueError(f'Unsupported model type provided. Supported model types: {self.supported_models.keys()}')
         
         self.model_type = model_type
+        self.lamb = lamb
         self.coef_ = []
+    
+    def get_model_specs(self):
+        if self.model_type in ['Logisitc', 'LDA']:
+            return [self.model_type]
+        return (self.model_type, self.lamb)
     
     # Optionally pass in gradient descent parameters or use defaults (see GradientDescent class)
     def fit(self, X, Y, SVC_Y_transform=True, LDA_X_drop_B0=True, adaptive_descent=False, initial_B=None, max_iterations=None, 
             etas=None, tol=None, err=None, show_iter=True):
+        new_X = X
+        new_Y = Y
         if self.model_type in self.requires_gradient_descent:
             computer = GradientDescent(adaptive=adaptive_descent)
 
             # If Class labels are 0/1 SVC requires -1/1
             if self.model_type in ['SVC', 'SVC_C'] and SVC_Y_transform:
-                Y = self.model.Y_transform(Y)
+                new_Y = self.model.Y_transform(new_Y)
             # Run the descent and check convergence
-            self.coef_, converged = computer.descend(self.model.gradient, X, Y, initial_B, 
-                                                                  max_iterations, tol, etas, err, show_iter)
+            self.coef_, converged = computer.descend(self.model.gradient, new_X, new_Y, initial_B, 
+                                                     max_iterations, tol, etas, err, show_iter)
             # TODO: Decide how to handle what happens when descent doesn't converge
         elif self.model_type == 'LDA':
             if LDA_X_drop_B0:
-                X = self.model.X_transform(X)
-            self.coef_ = self.model.closed_form(X, Y)
+                new_X = self.model.X_transform(new_X)
+            self.coef_ = self.model.closed_form(new_X, new_Y)
         else:
             raise ValueError('Tried to fit a model with an unknown type.')
     
@@ -64,10 +73,9 @@ class Logistic:
 
     # Logistic Regression Gradient
     def logistic_gradient(self, X, Y, B):
-        half =  np.exp(X @ B)
+        half = np.exp(X @ B)
         p = half / (1 + half)
-        gradient = -1 * (Y - p).T @ X
-        
+        gradient = -1 * (Y - p) @ X
         return gradient
 
     # Logistic Regression with Lasso Penalty
@@ -79,7 +87,7 @@ class Logistic:
         # Add on +/- lambda * B to the gradient
         lamb_beta = np.nan_to_num(self.lamb * -1 * (B / (B * -1)))
         gradient = partial_gradient + lamb_beta
-        
+
         return gradient
     
     def predict(self, X, B, return_prob=False, prob_cutoff=.5):
@@ -155,7 +163,8 @@ class LDA:
         z_bar2 = (a @ X_group2.T).mean()
 
         cutoff = .5 * (z_bar1 + z_bar2) - np.log(n1 / n2)
-        
+        #change_1 = X_group1.mean(axis=0) + X_group2.mean(axis=0)
+        #cutoff = .5 * (x_bar_1_2.T @ linalg.inv(Sp) @ change_1) - np.log(n1 / n2)
         # a * X >= cutoff -> class 1; else class 2
         return a, cutoff
 
@@ -203,6 +212,7 @@ class GradientDescent:
                 (iterations == 0 or (eta * (gradient ** 2)).sum() > tol):
                 # calls the regression function
                 gradient = reg_func(X, Y, B)
+
                 B = B - (eta * gradient)
                 iterations += 1
 

@@ -1,41 +1,54 @@
 from sklearn.metrics import roc_auc_score
 import numpy as np
 
-def get_accuracy(p, Y):
+def accuracy(p, Y):
     return sum((p > .5) == Y) / len(Y)
 
-def get_precision(p, Y):
+def precision(p, Y):
     # precision = TP / (TP + FP)
     TP = np.where(Y, ((p > .5) == Y), False).sum()
     FP = np.where(Y == 0, (p > .5), False).sum()
     return TP / (TP + FP)
    
-def get_recall(p, Y):
+def recall(p, Y):
     # recall = TP / (TP + FN)
     TP = np.where(Y, ((p > .5) == Y), False).sum()
     FN = np.where(Y, ((p > .5) != Y), False).sum()
     return TP / (TP + FN)
 
-def get_f1(p, Y):
-    precision = get_precision(p, Y)
-    recall = get_recall(p, Y)
-    return 2 / ((1 / precision) + (1 / recall))
+def fmeasure(p, Y, B=1):
+    precision = precision(p, Y)
+    recall = recall(p, Y)
+    return ((1 + B ** 2) * precision * recall) / ((B ** 2 * precision) + recall)
+
+def sensitivity(p, Y):
+    TP = np.where(Y, ((p > .5) == Y), False).sum()
+    FN = np.where(Y, ((p > .5) != Y), False).sum()
+    return TP / (TP + FN)
+
+def specificity(p, Y):
+    TN = np.where(Y, ((p <= .5) == Y), False).sum()
+    FP = np.where(Y == 0, (p > .5), False).sum()
+    return TN / (TN + FP)
+
+def roc_auc(p, Y):
+    return roc_auc_score(Y, p)
     
 # Compute Accuracy, precision, recall, and f1
 def compute_metrics(p, Y):
-    # precision = TP / (TP + FP)
-    # recall = TP / (TP + FN)
-    accuracy = sum((p > .5) == Y) / len(Y)
-    
-    TP = np.where(Y, ((p > .5) == Y), False).sum()
-    FP = np.where(Y == 0, (p > .5), False).sum()
-    precision = TP / (TP + FP)
-    
-    FN = np.where(Y, ((p > .5) != Y), False).sum()
-    recall = TP / (TP + FN)
-    
-    f1 = 2 / ((1 / precision) + (1 / recall))
-    
+    accuracy = accuracy(p, Y)
+    precision = precision(p, Y)
+    recall = recall(p, Y)
+    f1 = fmeasure(p, Y, B=1)
     auc = roc_auc_score(Y, p)
     print(f"Accuracy: {round(accuracy, 3)}; Precision: {round(precision, 3)}; " + \
            f"Recall: {round(recall, 3)}; f1: {round(f1, 3)}; ROC-AUC: {round(auc, 3)}")
+
+def compute_metrics2(p, Y):
+    accuracy = accuracy(p, Y)
+    sensitivity = sensitivity(p, Y)
+    specificity = specificity(p, Y)
+    f1 = fmeasure(p, Y, B=1)
+    auc = roc_auc_score(Y, p)
+    print(f"Accuracy: {round(accuracy, 3)}; Sensitivity: {round(sensitivity, 3)}; " + \
+           f"Specificity: {round(specificity, 3)}; f1: {round(f1, 3)}; ROC-AUC: {round(auc, 3)}")
