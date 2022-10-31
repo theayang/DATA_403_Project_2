@@ -30,6 +30,8 @@ class AnalysisPipeline:
         self.models = models
         self.best_model = None
 
+        self.dev_set_analysis = None
+
     def process_data(self, split_type='random', train_prop=.8, dev_prop=.1, numeric=[]):
         self.processor.process_data(numeric)
         self.processor.calculate_train_dev_test_split(split_type, train_prop, dev_prop)
@@ -48,6 +50,7 @@ class AnalysisPipeline:
         best_score = 0
         best_model = None
         best_model_specs = None
+        best_predictions = None
         for model in self.models:
             predictions = model.predict(dev_X)
             score = self.score_func(predictions, dev_Y)
@@ -56,9 +59,12 @@ class AnalysisPipeline:
                 best_score = score
                 best_model = model
                 best_model_specs = specs
+                best_predictions = predictions
             scores.append((specs, score))
         self.best_model = best_model
-        return best_model_specs, scores
+        self.dev_set_analysis = scores
+        best_model_conf_matrix = self.confusion_matrix(best_predictions, dev_Y)
+        return best_model_specs, best_model_conf_matrix
 
     def testscore_best_model(self):
         if self.best_model is None:
@@ -66,3 +72,11 @@ class AnalysisPipeline:
         _, _, _, _, test_X, test_Y = self.processor.get_train_dev_test_sets()
         predictions = self.best_model.predict(test_X)
         return self.score_func(predictions, test_Y)
+
+    def confusion_matrix(self, predictions, truth):
+        conf = np.array([[0, 0], [0, 0]])
+        conf[0, 0] = ((predictions == 1) & (truth == 1)).sum()
+        conf[0, 1] = ((predictions == 1) & (truth != 1)).sum()
+        conf[1, 0] = ((predictions == 0) & (truth == 1)).sum()
+        conf[1, 1] = ((predictions == 0) & (truth == 0)).sum()
+        return pd.DataFrame(conf, columns=['True 1', 'True 0'], index=['Pred 1', 'Pred 0'])
