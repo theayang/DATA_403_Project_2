@@ -1,0 +1,169 @@
+CNT_FAM_MEMBERS
+How many family members does client have
+CNT_CHILDREN
+Number of children the client has
+0.879160640438957
+
+AMT_GOODS_PRICE
+For consumer loans it is the price of the goods for which the loan is given
+AMT_CREDIT
+Credit amount of the loan
+0.9869683054221499
+
+AMT_CREDIT
+Credit amount of the loan
+AMT_GOODS_PRICE
+For consumer loans it is the price of the goods for which the loan is given
+0.9869683054221499
+
+FLAG_EMP_PHONE
+Did client provide work phone (1=YES, 0=NO)
+DAYS_EMPLOYED
+How many days before the application the person started current employment
+0.999755011444388
+
+DAYS_EMPLOYED
+How many days before the application the person started current employment
+FLAG_EMP_PHONE
+Did client provide work phone (1=YES, 0=NO)
+0.999755011444388
+
+CNT_CHILDREN
+Number of children the client has
+CNT_FAM_MEMBERS
+How many family members does client have
+0.879160640438957
+
+REGION_RATING_CLIENT_W_CITY
+Our rating of the region where client lives with taking city into account (1,2,3)
+REGION_RATING_CLIENT
+Our rating of the region where client lives (1,2,3)
+0.9508422141646482
+
+REGION_RATING_CLIENT
+Our rating of the region where client lives (1,2,3)
+REGION_RATING_CLIENT_W_CITY
+Our rating of the region where client lives with taking city into account (1,2,3)
+0.9508422141646482
+
+LIVE_REGION_NOT_WORK_REGION
+Flag if client's contact address does not match work address (1=different, 0=same, at region level)
+REG_REGION_NOT_WORK_REGION
+Flag if client's permanent address does not match work address (1=different, 0=same, at region level)
+0.8606267802832626
+
+REG_REGION_NOT_WORK_REGION
+Flag if client's permanent address does not match work address (1=different, 0=same, at region level)
+LIVE_REGION_NOT_WORK_REGION
+Flag if client's contact address does not match work address (1=different, 0=same, at region level)
+0.8606267802832626
+
+LIVE_CITY_NOT_WORK_CITY
+Flag if client's contact address does not match work address (1=different, 0=same, at city level)
+REG_CITY_NOT_WORK_CITY
+Flag if client's permanent address does not match work address (1=different, 0=same, at city level)
+0.8255747229688812
+
+REG_CITY_NOT_WORK_CITY
+Flag if client's permanent address does not match work address (1=different, 0=same, at city level)
+LIVE_CITY_NOT_WORK_CITY
+Flag if client's contact address does not match work address (1=different, 0=same, at city level)
+0.8255747229688812
+
+ELEVATORS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+APARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8374473132894182
+
+LIVINGAPARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+APARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.9424851483864675
+
+LIVINGAREA_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+APARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.9159473447265859
+
+APARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+ELEVATORS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8374473132894182
+
+LIVINGAPARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+ELEVATORS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8142183219635333
+
+LIVINGAREA_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+ELEVATORS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8683406875915228
+
+APARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+LIVINGAPARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.9424851483864675
+
+ELEVATORS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+LIVINGAPARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8142183219635333
+
+LIVINGAREA_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+LIVINGAPARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8846900455382541
+
+APARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+LIVINGAREA_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.9159473447265859
+
+ELEVATORS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+LIVINGAREA_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8683406875915228
+
+LIVINGAPARTMENTS_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+LIVINGAREA_MEDI
+Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor
+0.8846900455382541
+
+OBS_60_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings with observable 60 DPD (days past due) default
+OBS_30_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings with observable 30 DPD (days past due) default
+0.998489542510996
+
+DEF_60_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings defaulted on 60 (days past due) DPD
+DEF_30_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings defaulted on 30 DPD (days past due) 
+0.8605173800835259
+
+OBS_30_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings with observable 30 DPD (days past due) default
+OBS_60_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings with observable 60 DPD (days past due) default
+0.998489542510996
+
+DEF_30_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings defaulted on 30 DPD (days past due) 
+DEF_60_CNT_SOCIAL_CIRCLE
+How many observation of client's social surroundings defaulted on 60 (days past due) DPD
+0.8605173800835259
+
+['AMT_GOODS_PRICE', 'CNT_CHILDREN', 'FLAG_EMP_PHONE', 'REGION_RATING_CLIENT_W_CITY', 'REG_REGION_NOT_WORK_REGION', 'LIVE_CITY_NOT_WORK_CITY', 'LIVINGAPARTMENTS_MEDI', 'ELEVATORS_MEDI', 'OBS_60_CNT_SOCIAL_CIRCLE', 'DEF_60_CNT_SOCIAL_CIRCLE', 'LIVINGAREA_MEDI']
