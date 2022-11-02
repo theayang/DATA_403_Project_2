@@ -14,7 +14,7 @@ class Processor:
     def process_data(self, numeric=[], dummify=True):
         self.X = self.standardize(numeric)
         if dummify:
-            self.X = pd.get_dummies(self.X, sparse=True)
+            self.X = pd.get_dummies(self.X, sparse=True, drop_first=True)
         self.X = self.pad_B0(ret_numpy=False)
 
     def pad_B0(self, ret_numpy=True):
@@ -40,12 +40,12 @@ class Processor:
 
     # Calculates the train, dev, and test set indices given a split type and proportions
     # If train, dev, test sets already exist, use the get_ function (this will recompute them)
-    # TODO: add stratified and smart future split code
-    def calculate_train_dev_test_split(self, split_type='random', train_prop=.8, dev_prop=.1):
-        if split_type not in ['random', 'stratified', 'non-random']:
+    # For set_class_prop_undersample, class_prop_1_0 is the ratio of # 1s / # 0s
+    def calculate_train_dev_test_split(self, split_type='random', train_prop=.8, dev_prop=.1, class_prop_1_0=1, silence=False):
+        if split_type not in ['random', 'stratified_class', 'set_class_prop_undersample']:
             raise ValueError('Bad type is provided')
 
-        if self.train_indices is not None:
+        if not silence and self.train_indices is not None:
             print("Re-calculating train, dev, and test sets")
 
         if split_type == 'random':
@@ -53,8 +53,49 @@ class Processor:
             left_over_prop = 1 - train_prop
             dev_indices = self.X[~(self.X.index.isin(train_indices))].sample(frac=dev_prop / left_over_prop).index
             test_indices = self.X[~(self.X.index.isin(train_indices)) & ~(self.X.index.isin(dev_indices))].index
-        #elif split_type == 'stratified':
-        
+        elif split_type == 'stratified_class':
+            zero_class = self.X[self.Y == 0]
+            pos_class = self.X[self.Y == 1]
+
+            train_zero_indices = zero_class.sample(frac=train_prop).index
+            train_pos_indices = pos_class.sample(frac=train_prop).index
+            train_indices = train_zero_indices.union(train_pos_indices)
+
+            left_over_prop = 1 - train_prop
+            dev_set_prop = dev_prop / left_over_prop
+            dev_zero_indices = zero_class[~(zero_class.index.isin(train_zero_indices))].sample(frac=dev_set_prop).index
+            dev_pos_indices = pos_class[~(pos_class.index.isin(train_pos_indices))].sample(frac=dev_set_prop).index
+            dev_indices = dev_zero_indices.union(dev_pos_indices)
+
+            test_zero_indices = zero_class[~(zero_class.index.isin(train_zero_indices.union(dev_zero_indices)))].index
+            test_pos_indices = pos_class[~(pos_class.index.isin(train_pos_indices.union(dev_pos_indices)))].index
+            test_indices = test_zero_indices.union(test_pos_indices)
+        elif split_type == 'set_class_prop_undersample':
+            # ASSUMES DEV PROP = TEST PROP and undersamples for the training set accordingly
+            zero_class = self.X[self.Y == 0]
+            pos_class = self.X[self.Y == 1]
+
+            dev_zero_indices = zero_class.sample(frac=dev_prop).index
+            dev_pos_indices = pos_class.sample(frac=dev_prop).index
+            dev_indices = dev_zero_indices.union(dev_pos_indices)
+
+            test_zero_indices = zero_class[~(zero_class.index.isin(dev_zero_indices))].sample(n=len(dev_zero_indices)).index
+            test_pos_indices = pos_class[~(pos_class.index.isin(dev_pos_indices))].sample(n=len(dev_pos_indices)).index
+            test_indices = test_zero_indices.union(test_pos_indices)
+            # At least one pos class
+            max_pos_n = len(pos_class) - len(dev_pos_indices) - len(test_pos_indices)
+            max_zero_n = len(zero_class) - len(dev_zero_indices) - len(test_zero_indices)
+            # frac * #0's = #1's
+            calculated_pos_n = class_prop_1_0 * max_zero_n 
+            # Clip to 1 - max_pos_n range
+            train_pos_n = int(max(min(max_pos_n, calculated_pos_n), 1))
+            train_zeros_n = int(min(train_pos_n / class_prop_1_0, max_zero_n)) if class_prop_1_0 != 0 else max_zero_n
+            # max is the size of the leftovers
+            train_pos_indices = pos_class[~(pos_class.index.isin(dev_pos_indices.union(test_pos_indices)))
+                                          ].sample(n=train_pos_n).index
+            train_zero_indices = zero_class[~(zero_class.index.isin(dev_zero_indices.union(test_zero_indices)))
+                                            ].sample(n=train_zeros_n).index
+            train_indices = train_pos_indices.union(train_zero_indices)
         self.train_indices = train_indices
         self.dev_indices = dev_indices
         self.test_indices = test_indices
