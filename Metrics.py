@@ -55,12 +55,10 @@ def net_revenue(p, Y, ann):
         return None
     ann = 0
     for i in range(len(Y)):
-        if (p[i] > .5) == Y[i] and p[i] > .5:
-            ann += 0
+        if (p[i] > .5) != Y[i] and p[i] < .5:
+            ann -= ann[i]
         elif (p[i] < .5) == Y[i] and p[i] < .5:
             ann += ann[i]
-        else:
-            ann -= ann[i]
     return ann
 
 # Compute Accuracy, precision, recall, and f1
