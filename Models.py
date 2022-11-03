@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from scipy import linalg
 
 class Model:
@@ -215,7 +216,7 @@ class GradientDescent:
 
                 B = B - (eta * gradient)
                 iterations += 1
-
+            
             if iterations < max_iterations and np.isinf(B).sum() == 0 and np.isnan(B).sum() == 0:
                 if show_iter:
                     print(f'Gradient converged w/ {iterations} iterations and eta = {eta}')
