@@ -4,7 +4,7 @@ from pandas.api.types import is_numeric_dtype
 from sklearn.decomposition import PCA
 
 class Processor:
-    def __init__(self, X, Y):
+    def __init__(self, X, Y, kaggle_test_data=None):
         self.columns = X.columns
         self.X = pd.DataFrame(X)
         self.Y = pd.Series(Y)
@@ -13,11 +13,16 @@ class Processor:
         self.test_indices = None
         self.pca_transformed = False
         self.pca = PCA(whiten=True, n_components=40)
+        self.kaggle_test_data = None
+        if kaggle_test_data is not None:
+            self.kaggle_test_data = kaggle_test_data
 
     def pca_transform(self):
         if not self.pca_transformed:
             self.X = pd.DataFrame(self.pca.fit_transform(self.X))
             self.pca_transformed = True
+            if self.kaggle_test_data is not None:
+                self.kaggle_test_data = pd.DataFrame(self.pca.transform(self.kaggle_test_data))
 
     def reduce_dimensions(self, trained_coefficients):
         self.X = self.X[self.columns[trained_coefficients == 0]]
@@ -30,6 +35,11 @@ class Processor:
             self.X = pd.get_dummies(self.X, drop_first=True)
         self.X = self.pad_B0(ret_numpy=False)
         self.columns = self.X.columns
+        if self.kaggle_test_data is not None:
+            self.kaggle_test_data = self.standardize(numeric)
+            if dummify:
+                self.kaggle_test_data = pd.get_dummies(self.kaggle_test_data, drop_first=True)
+            self.kaggle_test_data = self.pad_B0(ret_numpy=False)
 
     def pad_B0(self, ret_numpy=True):
         self.X['B0'] = 1
@@ -57,7 +67,7 @@ class Processor:
     # For set_class_prop_undersample, class_prop_1_0 is the ratio of # 1s / # 0s
     def calculate_train_dev_test_split(self, split_type='random', train_prop=.8, dev_prop=.1, 
                                        class_prop_1_0=1, silence=False, random_state=9):
-        if split_type not in ['random', 'stratified_class', 'set_class_prop_undersample']:
+        if split_type not in ['random', 'stratified_class', 'set_class_prop_undersample', 'non-random']:
             raise ValueError('Bad type is provided')
 
         if not silence and self.train_indices is not None:
@@ -111,6 +121,10 @@ class Processor:
             train_zero_indices = zero_class[~(zero_class.index.isin(dev_zero_indices.union(test_zero_indices)))
                                             ].sample(n=train_zeros_n, random_state=random_state).index
             train_indices = train_pos_indices.union(train_zero_indices)
+        elif split_type == 'non-random':
+            if self.kaggle_test_data is None:
+                raise ValueError('Must provide a link to the kaggle data')
+
         self.train_indices = train_indices
         self.dev_indices = dev_indices
         self.test_indices = test_indices
