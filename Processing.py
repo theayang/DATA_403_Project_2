@@ -131,3 +131,9 @@ class Processor:
             test_X = test_X.to_numpy()
             test_Y = test_Y.to_numpy()
         return train_X, train_Y, dev_X, dev_Y, test_X, test_Y
+
+    def get_original_dataframes_from_splits(self, orignal_df):
+        train = original_df.loc[self.train_indices]
+        dev = original_df.loc[self.dev_indices]
+        test = original_df.loc[self.test_indices]
+        return train, dev, test

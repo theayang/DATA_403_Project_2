@@ -53,13 +53,19 @@ def net_revenue(p, Y, ann):
     if len(p) != len(ann) or len(Y) != len(ann):
         print('Wrong lengths of inputs')
         return None
-    ann = 0
+    tot = 0
+    realized = 0
+    Y = list(Y)
+    ann = list(ann)
+    p = list(p)
     for i in range(len(Y)):
         if (p[i] > .5) != Y[i] and p[i] < .5:
-            ann -= ann[i]
-        elif (p[i] < .5) == Y[i] and p[i] < .5:
-            ann += ann[i]
-    return ann
+            tot -= ann[i]
+        elif (p[i] > .5) == Y[i] and p[i] < .5:
+            tot += ann[i]
+        if Y[i] == 0:
+            realized += ann[i]
+    return tot / realized
 
 # Compute Accuracy, precision, recall, and f1
 
