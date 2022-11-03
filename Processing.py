@@ -1,21 +1,35 @@
 import pandas as pd
 import numpy as np
 from pandas.api.types import is_numeric_dtype
+from sklearn.decomposition import PCA
 
 class Processor:
     def __init__(self, X, Y):
+        self.columns = X.columns
         self.X = pd.DataFrame(X)
         self.Y = pd.Series(Y)
         self.train_indices = None
         self.dev_indices = None
         self.test_indices = None
+        self.pca_transformed = False
+        self.pca = PCA(whiten=True, n_components=40)
+
+    def pca_transform(self):
+        if not self.pca_transformed:
+            self.X = pd.DataFrame(self.pca.fit_transform(self.X))
+            self.pca_transformed = True
+
+    def reduce_dimensions(self, trained_coefficients):
+        self.X = self.X[self.columns[trained_coefficients == 0]]
+        print(f"Reduced from {len(self.columns)} B's to {self.X.shape[1]} B's]\nNow re-calculate train, dev, and test sets")
 
     # Expects dataframe w/o Y
     def process_data(self, numeric=[], dummify=True):
         self.X = self.standardize(numeric)
         if dummify:
-            self.X = pd.get_dummies(self.X, sparse=True, drop_first=True)
+            self.X = pd.get_dummies(self.X, drop_first=True)
         self.X = self.pad_B0(ret_numpy=False)
+        self.columns = self.X.columns
 
     def pad_B0(self, ret_numpy=True):
         self.X['B0'] = 1

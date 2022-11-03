@@ -32,9 +32,11 @@ class AnalysisPipeline:
 
         self.dev_set_analysis = None
 
-    def process_data(self, split_type='random', train_prop=.8, dev_prop=.1, numeric=[]):
+    def process_data(self, split_type='random', train_prop=.8, dev_prop=.1, class_prop_1_0=1, numeric=[], pca=False):
         self.processor.process_data(numeric)
-        self.processor.calculate_train_dev_test_split(split_type, train_prop, dev_prop)
+        if pca:
+            self.processor.pca_transform()
+        self.processor.calculate_train_dev_test_split(split_type, train_prop, dev_prop, class_prop_1_0)
 
     def fit_models(self, adaptive_descent=False, initial_B=None, max_iterations=None, 
                    etas=None, tol=None, err=None, show_iter=False):
