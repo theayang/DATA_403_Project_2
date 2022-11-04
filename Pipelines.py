@@ -53,11 +53,10 @@ class AnalysisPipeline:
         best_model_specs = None
         best_predictions = None
         for i in range(k):
-            train_X = self.processor.X.loc[trains[i]]
-            train_Y = self.processor.Y.loc[trains[i]]
-            dev_X = self.processor.X.loc[devs[i]]
-            dev_Y = self.processor.Y.loc[devs[i]]
-            print(len(dev_X), len(dev_Y))
+            train_X = self.processor.X.loc[trains[i]].to_numpy()
+            train_Y = self.processor.Y.loc[trains[i]].to_numpy()
+            dev_X = self.processor.X.loc[devs[i]].to_numpy()
+            dev_Y = self.processor.Y.loc[devs[i]].to_numpy()
 
             self.fit_models(train_X=train_X, train_Y=train_Y, adaptive_descent=adaptive_descent, initial_B=initial_B, max_iterations=max_iterations,
                             etas=etas, tol=tol, err=err, show_iter=show_iter)
@@ -89,6 +88,7 @@ class AnalysisPipeline:
                    etas=None, tol=None, err=None, show_iter=False, train_X=None, train_Y=None):
         if train_X is None and train_Y is None:
             train_X, train_Y, _, _, _, _ = self.processor.get_train_dev_test_sets()
+            print(train_X.shape, train_Y.shape)
         for model in self.models:
             model.fit(train_X, train_Y, adaptive_descent=adaptive_descent, initial_B=initial_B, max_iterations=max_iterations,
                       etas=etas, tol=tol, err=err, show_iter=show_iter)
